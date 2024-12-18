@@ -1,13 +1,14 @@
 use std::ptr;
 use std::slice;
 
+use utf16string::WStr;
 use windows_sys::Win32::Foundation::{
     ERROR_NO_MORE_FILES, GetLastError, HANDLE, INVALID_HANDLE_VALUE,
 };
 use windows_sys::Win32::Storage::FileSystem::{FindFirstVolumeW, FindNextVolumeW, FindVolumeClose};
 
 #[derive(Debug, Clone)]
-pub struct Volume<const N: usize> {
+pub struct Volume<const N: usize = 64> {
     handle: HANDLE,
     buf: [u16; N],
 }
@@ -62,13 +63,11 @@ impl<const N: usize> Iterator for Volume<{ N }> {
             }
         }
 
-        let encoding = encoding_rs::UTF_16LE;
-
         let data = self.buf.as_ptr() as *const u8;
         let len = self.buf.len() as u32 * (u16::BITS / u8::BITS);
         let bytes = unsafe { slice::from_raw_parts(data, len as usize) };
-        let decoded = encoding.decode(bytes).0;
 
-        Some(decoded.into_owned())
+        let wstr = WStr::from_utf16le(bytes).ok()?;
+        Some(wstr.to_utf8())
     }
 }
