@@ -46,28 +46,34 @@ fn main() -> Result<()> {
     } in drivedisks
     {
         println!("disk:");
+        println!("    index: {index}");
         println!("    model: {model}");
         println!("    serial: {serial_number}");
         println!("    drive:");
-        for (&letter, &index) in disk_index_map
+        for (&letter, _) in disk_index_map
             .iter()
             .filter(|(_, idx)| **idx == index as usize)
         {
-            let freespace = FreeSpace::try_from_drive(letter).unwrap();
-            let bytes_for_caller = human_size(freespace.bytes_for_caller);
-            let total_bytes = human_size(freespace.total_bytes);
+            println!("    - type: drive");
+            println!("      name: {letter}");
+            match FreeSpace::try_from_drive(letter) {
+                Some(freespace) => {
+                    let bytes_for_caller = human_size(freespace.bytes_for_caller);
+                    let total_bytes = human_size(freespace.total_bytes);
+                    println!("      space: {bytes_for_caller:.02}/{total_bytes:.02}");
+                }
+                None => (),
+            };
 
-            println!("    - letter: {letter}");
-            println!("      space: {bytes_for_caller:.02}/{total_bytes:.02}");
-            println!("      diskindex: {index}");
             println!();
         }
 
-        for (volume, index) in volume_index_map
+        for (volume, _) in volume_index_map
             .iter()
             .filter(|(_, idx)| **idx == index as usize)
         {
-            println!("    - volume: {volume}");
+            println!("    - type: volume");
+            println!("      name: {volume}");
 
             match FreeSpace::try_from_ascii_path(&volume) {
                 Some(freespace) => {
@@ -78,7 +84,6 @@ fn main() -> Result<()> {
                 None => (),
             };
 
-            println!("      diskindex: {index}");
             println!();
         }
     }
