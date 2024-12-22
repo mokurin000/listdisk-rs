@@ -4,14 +4,17 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-default = ["volume", "logical-drives", "freespace"]
+default = ["volume", "logical-drives", "freespace", "drive-info", "serde"]
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
 freespace = ["win32_sys"]
+drive-info = ["wmi"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]
 win32_sys_foundation = ["windows-sys/Win32_Foundation"]
+wmi = ["dep:wmi"]
+serde = ["dep:serde"]
 
 [dependencies]
 log = "0.4.22"
@@ -21,6 +24,8 @@ windows-sys = { version = "0.59.0", optional = true }
 bitvec = { version = "1.0.1", optional = true, default-features = false, features = [
     "alloc",
 ] }
+wmi = { version = "0.14.2", optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 anyhow = "1"
@@ -37,3 +42,7 @@ required-features = ["logical-drives"]
 [[example]]
 name = "freespace"
 required-features = ["freespace", "encoding"]
+
+[[example]]
+name = "diskdrive"
+required-features = ["drive-info", "serde"]
