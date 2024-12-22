@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, process::Command};
 
 use wmi::{COMLibrary, WMIConnection, WMIResult};
 
@@ -78,4 +78,27 @@ impl DriveInfo {
         let wmi_conn = WMIConnection::new(com_con)?;
         Ok(Self { wmi_conn })
     }
+}
+
+pub fn diskindex_by_driveletter(drive_letter: char) -> Result<usize, Error> {
+    let stdout = Command::new("powershell.exe")
+        .arg("-command")
+        .arg(format!(
+            "(Get-Partition -DriveLetter {drive_letter}).DiskNumber"
+        ))
+        .output()?
+        .stdout;
+
+    Ok(String::from_utf8(stdout)
+        .expect("failed to parse output")
+        .trim()
+        .parse()?)
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("io error: {0}")]
+    IOError(#[from] std::io::Error),
+    #[error("parse error: {0}")]
+    ParseError(#[from] std::num::ParseIntError),
 }
