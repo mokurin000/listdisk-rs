@@ -13,24 +13,27 @@ pub struct FreeSpace {
 }
 
 impl FreeSpace {
-    pub fn from_drive(drive_letter: char) -> Option<Self> {
+    pub fn try_from_drive(drive_letter: char) -> Option<Self> {
         if !drive_letter.is_ascii_alphabetic() {
             return None;
         }
         let drive_letter = drive_letter.to_ascii_uppercase();
 
         let path = format!("{drive_letter}:/");
-        unsafe { Self::from_ascii_path(path) }
+        Self::try_from_ascii_path(path)
     }
 
-    pub unsafe fn from_ascii_path(path: impl AsRef<str>) -> Option<Self> {
+    pub fn try_from_ascii_path(path: impl AsRef<str>) -> Option<Self> {
+        if !path.as_ref().is_ascii() {
+            return None;
+        }
         let dirpath = CString::from_str(path.as_ref()).ok()?;
 
         unsafe { freespace_from_dirpath(dirpath.as_ptr() as _) }
     }
 
     #[cfg(feature = "encoding")]
-    pub fn from_path(path: impl AsRef<std::path::Path>) -> Option<Self> {
+    pub fn try_from_path(path: impl AsRef<std::path::Path>) -> Option<Self> {
         let wstring =
             utf16string::WString::<utf16string::LE>::from(path.as_ref().to_string_lossy().as_ref());
         let dirpath = wstring.as_ptr() as _;
@@ -38,6 +41,9 @@ impl FreeSpace {
     }
 }
 
+/// # Safety
+///
+/// Input must be valid ASCII null-terminated cstring
 pub unsafe fn freespace_from_dirpath(dirpath: *const u8) -> Option<FreeSpace> {
     let mut bytes_for_caller = 0;
     let mut total_bytes = 0;
@@ -65,6 +71,9 @@ pub unsafe fn freespace_from_dirpath(dirpath: *const u8) -> Option<FreeSpace> {
     })
 }
 
+/// # Safety
+///
+/// Input must be valid UTF-16LE null-terminated cstring
 pub unsafe fn freespace_from_dirpath_unicode(dirpath: *const u16) -> Option<FreeSpace> {
     let mut bytes_for_caller = 0;
     let mut total_bytes = 0;

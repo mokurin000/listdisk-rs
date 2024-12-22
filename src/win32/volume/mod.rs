@@ -13,14 +13,20 @@ pub struct Volume<const N: usize = 64> {
     buf: [u16; N],
 }
 
-impl<const N: usize> Volume<{ N }> {
-    pub fn new() -> Self {
+impl<const N: usize> Default for Volume<{ N }> {
+    fn default() -> Self {
         let buffer = [0_u16; N];
 
         Self {
             handle: ptr::null_mut(),
             buf: buffer,
         }
+    }
+}
+
+impl<const N: usize> Volume<{ N }> {
+    pub fn new() -> Self {
+        Self::default()
     }
 }
 
