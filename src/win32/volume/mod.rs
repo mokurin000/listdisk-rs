@@ -74,6 +74,10 @@ impl<const N: usize> Iterator for Volume<{ N }> {
         let bytes = unsafe { slice::from_raw_parts(data, len as usize) };
 
         let wstr = WStr::from_utf16le(bytes).ok()?;
-        Some(wstr.to_utf8())
+        Some(
+            wstr.to_utf8()
+                .trim_end_matches(|ch| ch as u32 == 0)
+                .to_string(),
+        )
     }
 }

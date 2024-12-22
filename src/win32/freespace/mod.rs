@@ -36,8 +36,12 @@ impl FreeSpace {
     pub fn try_from_path(path: impl AsRef<std::path::Path>) -> Option<Self> {
         let wstring =
             utf16string::WString::<utf16string::LE>::from(path.as_ref().to_string_lossy().as_ref());
-        let dirpath = wstring.as_ptr() as _;
-        unsafe { freespace_from_dirpath_unicode(dirpath) }
+        let mut dirpath = wstring.as_bytes().to_vec();
+        // push null twice, for u16 width
+        dirpath.push(0);
+        dirpath.push(0);
+
+        unsafe { freespace_from_dirpath_unicode(dirpath.as_ptr() as _) }
     }
 }
 

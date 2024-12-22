@@ -2,17 +2,39 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use byte_unit::{AdjustedByte, Byte, Unit};
-use listdisk_rs::win32::drive_info::{DiskDrive, DriveInfo, diskindex_by_driveletter};
+use listdisk_rs::win32::drive_info::{
+    DiskDrive, DriveInfo, diskindex_by_driveletter, diskindex_by_win32_path,
+};
 use listdisk_rs::win32::freespace::FreeSpace;
 use listdisk_rs::win32::logical_drives::get_logical_driveletters;
+use listdisk_rs::win32::volume::Volume;
 
 fn main() -> Result<()> {
+    pretty_env_logger::init_timed();
+
     let chars = get_logical_driveletters().collect::<Vec<char>>();
     let mut disk_index_map = HashMap::new();
     for letter in chars {
+        eprintln!("finding for {letter}:");
         let disk_index = diskindex_by_driveletter(letter)?;
-        disk_index_map.insert(disk_index, letter);
+        disk_index_map.insert(letter, disk_index);
     }
+
+    let mut volume_index_map = HashMap::new();
+    for volume in Volume::<64>::new() {
+        eprintln!("finding for {volume}");
+        match diskindex_by_win32_path(&volume) {
+            Ok(disk_index) => {
+                volume_index_map.insert(volume, disk_index);
+            }
+            Err(e) => {
+                eprintln!("failed to read DiskIndex of {volume}: {e}");
+                continue;
+            }
+        }
+    }
+
+    eprintln!("disk_index prepare done!");
 
     let drive_info = DriveInfo::try_new()?;
     let drivedisks = drive_info.query_drive_info()?;
@@ -23,16 +45,41 @@ fn main() -> Result<()> {
         ..
     } in drivedisks
     {
-        if let Some(&letter) = disk_index_map.get(&(index as usize)) {
+        println!("disk:");
+        println!("    model: {model}");
+        println!("    serial: {serial_number}");
+        println!("    drive:");
+        for (&letter, &index) in disk_index_map
+            .iter()
+            .filter(|(_, idx)| **idx == index as usize)
+        {
             let freespace = FreeSpace::try_from_drive(letter).unwrap();
             let bytes_for_caller = human_size(freespace.bytes_for_caller);
             let total_bytes = human_size(freespace.total_bytes);
 
-            println!("Found parition {letter}:");
-            println!(" - space: {bytes_for_caller:.02}/{total_bytes:.02}");
-            println!("On disk:");
-            println!(" - model: {model}");
-            println!(" - serial: {serial_number}");
+            println!("    - letter: {letter}");
+            println!("      space: {bytes_for_caller:.02}/{total_bytes:.02}");
+            println!("      diskindex: {index}");
+            println!();
+        }
+
+        for (volume, index) in volume_index_map
+            .iter()
+            .filter(|(_, idx)| **idx == index as usize)
+        {
+            println!("    - volume: {volume}");
+
+            match FreeSpace::try_from_ascii_path(&volume) {
+                Some(freespace) => {
+                    let bytes_for_caller = human_size(freespace.bytes_for_caller);
+                    let total_bytes = human_size(freespace.total_bytes);
+                    println!("      space: {bytes_for_caller:.02}/{total_bytes:.02}");
+                }
+                None => (),
+            };
+
+            println!("      diskindex: {index}");
+            println!();
         }
     }
 
