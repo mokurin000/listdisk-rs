@@ -13,12 +13,15 @@ fn main() -> Result<()> {
     pretty_env_logger::init_timed();
 
     let chars = get_logical_driveletters().collect::<Vec<char>>();
-    let mut disk_index_map = HashMap::new();
-    for letter in chars {
-        eprintln!("finding for {letter}:");
-        let disk_index = diskindex_by_driveletter(letter)?;
-        disk_index_map.insert(letter, disk_index);
-    }
+    let disk_index_map: HashMap<_, _> = chars
+        .iter()
+        .filter_map(|&letter| {
+            eprintln!("finding for {letter}:");
+            diskindex_by_driveletter(letter)
+                .ok()
+                .map(|index| (letter, index))
+        })
+        .collect();
 
     let mut volume_index_map = HashMap::new();
     for volume in Volume::<64>::new() {
