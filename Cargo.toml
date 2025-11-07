@@ -5,11 +5,19 @@ edition = "2024"
 license = "MIT"
 
 [features]
-default = ["volume", "logical-drives", "freespace", "drive-info", "serde"]
+default = [
+    "volume",
+    "logical-drives",
+    "freespace",
+    "drive-info",
+    "serde",
+    "physical-drive",
+]
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
 freespace = ["win32_sys"]
 drive-info = ["wmi"]
+physical-drive = ["wmi"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]

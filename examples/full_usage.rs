@@ -3,11 +3,12 @@ use std::collections::HashMap;
 use anyhow::Result;
 use byte_unit::{AdjustedByte, Byte, Unit};
 use listdisk_rs::win32::drive_info::{
-    DiskDrive, DriveInfo, diskindex_by_driveletter, diskindex_by_win32_path,
+    DiskDrive, diskindex_by_driveletter, diskindex_by_win32_path,
 };
 use listdisk_rs::win32::freespace::FreeSpace;
 use listdisk_rs::win32::logical_drives::get_logical_driveletters;
 use listdisk_rs::win32::volume::Volume;
+use wmi::WMIConnection;
 
 fn main() -> Result<()> {
     pretty_env_logger::init_timed();
@@ -39,8 +40,8 @@ fn main() -> Result<()> {
 
     eprintln!("disk_index prepare done!");
 
-    let drive_info = DriveInfo::try_new()?;
-    let drivedisks = drive_info.query_drive_info()?;
+    let wmi_conn = WMIConnection::new()?;
+    let drivedisks = wmi_conn.query::<DiskDrive>()?;
     for DiskDrive {
         index,
         model,

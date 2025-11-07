@@ -1,11 +1,13 @@
-use std::{collections::HashMap, process::Command};
+use std::process::Command;
 
-use wmi::{WMIConnection, WMIResult};
-
-pub struct DriveInfo {
-    wmi_conn: WMIConnection,
-}
-
+/// ```rust
+/// use wmi::WMIConnection;
+/// use listdisk_rs::win32::drive_info::DiskDrive;
+/// 
+/// let wmi_conn = WMIConnection::new()?;
+/// let disk_drives = wmi_conn.query::<DiskDrive>()?;
+/// Ok::<_, wmi::WMIError>(())
+/// ```
 #[cfg(feature = "serde")]
 #[derive(serde::Deserialize, Debug, PartialEq, Eq)]
 #[serde(rename = "Win32_DiskDrive")]
@@ -61,22 +63,6 @@ pub struct DiskDrive {
     pub signature: Option<u32>,
     pub size: Option<u64>,
     pub status_info: Option<u16>,
-}
-
-impl DriveInfo {
-    #[cfg(feature = "serde")]
-    pub fn query_drive_info(&self) -> WMIResult<Vec<DiskDrive>> {
-        self.wmi_conn.query()
-    }
-
-    pub fn query_drive_info_raw(&self) -> WMIResult<Vec<HashMap<String, wmi::Variant>>> {
-        self.wmi_conn.raw_query("SELECT * FROM Win32_DiskDrive")
-    }
-
-    pub fn try_new() -> WMIResult<Self> {
-        let wmi_conn = WMIConnection::new()?;
-        Ok(Self { wmi_conn })
-    }
 }
 
 pub fn diskindex_by_driveletter(drive_letter: char) -> Result<usize, Error> {
