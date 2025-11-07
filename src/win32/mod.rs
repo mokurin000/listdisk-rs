@@ -1,8 +1,8 @@
 #[cfg(feature = "drive-info")]
 pub mod drive_info;
 
-#[cfg(feature = "physical-drive")]
-pub mod physical_drive;
+#[cfg(feature = "physical-disk")]
+pub mod physical_disk;
 
 #[cfg(feature = "freespace")]
 pub mod freespace;
