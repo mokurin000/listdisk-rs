@@ -65,5 +65,9 @@ name = "diskdrive"
 required-features = ["drive-info", "serde", "wmi"]
 
 [[example]]
+name = "physicaldisk"
+required-features = ["physical-disk", "serde_repr", "wmi"]
+
+[[example]]
 name = "full_usage"
 required-features = ["default"]
