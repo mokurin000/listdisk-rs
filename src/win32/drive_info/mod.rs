@@ -1,6 +1,6 @@
 use std::{collections::HashMap, process::Command};
 
-use wmi::{COMLibrary, WMIConnection, WMIResult};
+use wmi::{WMIConnection, WMIResult};
 
 pub struct DriveInfo {
     wmi_conn: WMIConnection,
@@ -74,8 +74,7 @@ impl DriveInfo {
     }
 
     pub fn try_new() -> WMIResult<Self> {
-        let com_con = COMLibrary::new()?;
-        let wmi_conn = WMIConnection::new(com_con)?;
+        let wmi_conn = WMIConnection::new()?;
         Ok(Self { wmi_conn })
     }
 }
