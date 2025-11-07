@@ -1,11 +1,12 @@
 [package]
 name = "listdisk-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["mokurin000 <mokurin000@gmail.com>"]
 description = "win32 disk info utils"
 categories = ["os::windows-apis", "filesystem"]
 license = "MIT"
+repository = "https://github.com/mokurin000/listdisk-rs"
 
 [features]
 default = [
