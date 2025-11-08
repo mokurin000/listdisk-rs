@@ -70,7 +70,7 @@ required-features = ["drive-info", "serde", "wmi"]
 
 [[example]]
 name = "physicaldisk"
-required-features = ["physical-disk", "serde_repr", "wmi"]
+required-features = ["drive-info", "physical-disk", "serde_repr", "wmi"]
 
 [[example]]
 name = "full_usage"
