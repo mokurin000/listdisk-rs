@@ -2,11 +2,10 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use byte_unit::{AdjustedByte, Byte, Unit};
-use listdisk_rs::win32::drive_info::{
-    DiskDrive, diskindex_by_driveletter, diskindex_by_win32_path,
-};
+use listdisk_rs::win32::drive_info::DiskDrive;
 use listdisk_rs::win32::freespace::FreeSpace;
 use listdisk_rs::win32::logical_drives::get_logical_driveletters;
+use listdisk_rs::win32::utils::{diskindex_by_driveletter, diskindex_by_volume_path};
 use listdisk_rs::win32::volume::Volume;
 use wmi::WMIConnection;
 
@@ -27,7 +26,7 @@ fn main() -> Result<()> {
     let mut volume_index_map = HashMap::new();
     for volume in Volume::<64>::new() {
         eprintln!("finding for {volume}");
-        match diskindex_by_win32_path(&volume) {
+        match diskindex_by_volume_path(&volume) {
             Ok(disk_index) => {
                 volume_index_map.insert(volume, disk_index);
             }

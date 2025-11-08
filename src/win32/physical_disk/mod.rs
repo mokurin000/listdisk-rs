@@ -18,6 +18,7 @@ pub use typing::{BusType, HealthStatus, MediaType, Usage};
 ///
 /// Also see [MSDN](https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-physicaldisk)
 #[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename = "MSFT_PhysicalDisk")]
 #[serde(rename_all = "PascalCase")]

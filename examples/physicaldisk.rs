@@ -1,6 +1,6 @@
 use std::{env, error::Error};
 
-use listdisk_rs::win32::{drive_info::diskindex_by_driveletter, physical_disk::PhysicalDisk};
+use listdisk_rs::win32::{physical_disk::PhysicalDisk, utils::diskindex_by_driveletter};
 use wmi::WMIConnection;
 
 fn main() -> Result<(), Box<dyn Error>> {
