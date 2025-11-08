@@ -14,7 +14,7 @@ default = [
     "logical-drives",
     "freespace",
     "drive-info",
-    "serde_repr",
+    "serde",
     "wmi",
     "physical-disk",
 ]
@@ -22,14 +22,13 @@ volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
 freespace = ["win32_sys"]
 drive-info = []
-physical-disk = ["serde_repr"]
+physical-disk = ["serde"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]
 win32_sys_foundation = ["windows-sys/Win32_Foundation"]
 wmi = ["dep:wmi"]
-serde = ["dep:serde"]
-serde_repr = ["serde", "dep:serde_repr"]
+serde = ["dep:serde", "dep:serde_repr"]
 
 [dependencies]
 log = "0.4.22"

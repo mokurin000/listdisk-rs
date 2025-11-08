@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "serde_repr")]
+#[cfg(feature = "serde")]
 mod typing;
-#[cfg(feature = "serde_repr")]
+#[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 pub use typing::{BusType, HealthStatus, MediaType, Usage};
 
 /// ```rust
@@ -24,26 +25,10 @@ pub struct PhysicalDisk {
     pub device_id: String,
     pub unique_id_format: u16,
 
-    #[cfg(not(feature = "serde_repr"))]
-    pub bus_type: u16,
-    #[cfg(not(feature = "serde_repr"))]
-    pub media_type: u16,
-    #[cfg(not(feature = "serde_repr"))]
-    pub health_status: u16,
-    #[cfg(not(feature = "serde_repr"))]
-    pub usage: u16,
-    #[cfg(not(feature = "serde_repr"))]
-    pub supported_usages: Vec<u16>,
-
-    #[cfg(feature = "serde_repr")]
     pub bus_type: BusType,
-    #[cfg(feature = "serde_repr")]
     pub media_type: MediaType,
-    #[cfg(feature = "serde_repr")]
     pub health_status: HealthStatus,
-    #[cfg(feature = "serde_repr")]
     pub usage: Usage,
-    #[cfg(feature = "serde_repr")]
     pub supported_usages: Vec<Usage>,
 
     pub friendly_name: String,

@@ -1,7 +1,13 @@
+#[cfg(feature = "serde")]
+mod typing;
+#[cfg(feature = "serde")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
+pub use typing::{Availability, Capability, PowerManagementCapability, StatusInfo};
+
 /// ```rust
 /// use wmi::WMIConnection;
 /// use listdisk_rs::win32::drive_info::DiskDrive;
-/// 
+///
 /// let wmi_conn = WMIConnection::new()?;
 /// let disk_drives = wmi_conn.query::<DiskDrive>()?;
 /// Ok::<_, wmi::WMIError>(())
@@ -59,8 +65,12 @@ pub struct DiskDrive {
     pub signature: Option<u32>,
     pub size: Option<u64>,
 
-    pub availability: Option<u16>,
-    pub status_info: Option<u16>,
-    pub capabilities: Vec<u16>,
-    pub power_management_capabilities: Vec<u16>,
+    #[serde(default)]
+    pub availability: Option<Availability>,
+    #[serde(default)]
+    pub status_info: Option<StatusInfo>,
+    #[serde(default)]
+    pub capabilities: Vec<Capability>,
+    #[serde(default)]
+    pub power_management_capabilities: Vec<PowerManagementCapability>,
 }
