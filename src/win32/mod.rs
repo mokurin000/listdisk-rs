@@ -6,6 +6,10 @@ pub mod drive_info;
 #[cfg_attr(docsrs, doc(cfg(feature = "physical-disk")))]
 pub mod physical_disk;
 
+#[cfg(feature = "partition")]
+#[cfg_attr(docsrs, doc(cfg(feature = "partition")))]
+pub mod partition;
+
 #[cfg(feature = "freespace")]
 #[cfg_attr(docsrs, doc(cfg(feature = "freespace")))]
 pub mod freespace;

@@ -17,12 +17,14 @@ default = [
     "serde",
     "wmi",
     "physical-disk",
+    "partition",
 ]
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
 freespace = ["win32_sys"]
 drive-info = ["serde", "wmi"]
 physical-disk = ["serde"]
+partition = ["serde"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]
@@ -65,11 +67,15 @@ required-features = ["freespace", "encoding"]
 
 [[example]]
 name = "diskdrive"
-required-features = ["drive-info", "serde", "wmi"]
+required-features = ["drive-info", "wmi"]
 
 [[example]]
 name = "physicaldisk"
-required-features = ["physical-disk", "serde", "wmi"]
+required-features = ["physical-disk", "wmi"]
+
+[[example]]
+name = "partitions"
+required-features = ["partition", "wmi"]
 
 [[example]]
 name = "full_usage"
