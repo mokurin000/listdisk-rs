@@ -34,13 +34,6 @@ Run a specific example (replace `EXAMPLE` as needed):
 cargo run --example list_volume
 ```
 
-Common examples include:
-- `list_volume` (requires `volume` feature)
-- `list_drives` (requires `logical-drives` feature)
-- `freespace` (requires `freespace` and `encoding`)
-- `diskdrive` (requires `drive-info`, `serde`)
-- `full_usage` (requires default features)
-
 ### Feature flags
 
 Enable features with Cargo's `--features` flag, e.g.:
