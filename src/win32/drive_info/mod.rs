@@ -18,10 +18,11 @@ pub fn diskindex_by_driveletter(drive_letter: char) -> Result<usize, Error> {
         .parse()?)
 }
 
-pub fn diskindex_by_win32_path(win32_path: impl AsRef<str>) -> Result<usize, Error> {
+/// verbatim_path: `\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\`
+pub fn diskindex_by_win32_path(verbatim_path: impl AsRef<str>) -> Result<usize, Error> {
     let command = format!(
         "(Get-Partition -volume (Get-Volume -Path \"{}\")).DiskNumber",
-        win32_path.as_ref()
+        verbatim_path.as_ref()
     );
     let stdout = Command::new("powershell.exe")
         .arg("-command")
