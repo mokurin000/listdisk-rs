@@ -14,10 +14,11 @@ default = [
     "logical-drives",
     "freespace",
     "drive-info",
-    "serde",
-    "wmi",
     "physical-disk",
     "partition",
+    "volume_wmi",
+    "serde",
+    "wmi",
 ]
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
@@ -25,6 +26,7 @@ freespace = ["win32_sys"]
 drive-info = ["serde", "wmi"]
 physical-disk = ["serde"]
 partition = ["serde"]
+volume_wmi = ["serde"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]
@@ -56,6 +58,10 @@ pretty_env_logger = "0.5"
 [[example]]
 name = "list_volume"
 required-features = ["volume"]
+
+[[example]]
+name = "list_volume_wmi"
+required-features = ["physical-disk", "partition", "volume_wmi", "wmi"]
 
 [[example]]
 name = "list_drives"

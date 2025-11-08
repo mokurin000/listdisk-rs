@@ -10,6 +10,10 @@ pub mod physical_disk;
 #[cfg_attr(docsrs, doc(cfg(feature = "partition")))]
 pub mod partition;
 
+#[cfg(feature = "volume_wmi")]
+#[cfg_attr(docsrs, doc(cfg(feature = "volume_wmi")))]
+pub mod volume_wmi;
+
 #[cfg(feature = "freespace")]
 #[cfg_attr(docsrs, doc(cfg(feature = "freespace")))]
 pub mod freespace;
