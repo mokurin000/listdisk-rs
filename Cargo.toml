@@ -1,6 +1,6 @@
 [package]
 name = "listdisk-rs"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 authors = ["mokurin000 <mokurin000@gmail.com>"]
 description = "win32 disk info utils"
@@ -69,7 +69,7 @@ required-features = ["drive-info", "serde", "wmi"]
 
 [[example]]
 name = "physicaldisk"
-required-features = ["drive-info", "physical-disk", "serde_repr", "wmi"]
+required-features = ["drive-info", "physical-disk", "serde", "wmi"]
 
 [[example]]
 name = "full_usage"
