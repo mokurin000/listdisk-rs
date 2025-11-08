@@ -21,7 +21,7 @@ default = [
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
 freespace = ["win32_sys"]
-drive-info = []
+drive-info = ["serde", "wmi"]
 physical-disk = ["serde"]
 
 encoding = ["dep:utf16string"]

@@ -1,7 +1,4 @@
-#[cfg(feature = "serde")]
 mod typing;
-#[cfg(feature = "serde")]
-#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 pub use typing::{Availability, Capability, PowerManagementCapability, StatusInfo};
 
 /// ```rust
@@ -12,7 +9,6 @@ pub use typing::{Availability, Capability, PowerManagementCapability, StatusInfo
 /// let disk_drives = wmi_conn.query::<DiskDrive>()?;
 /// Ok::<_, wmi::WMIError>(())
 /// ```
-#[cfg(feature = "serde")]
 #[derive(serde::Deserialize, Debug, PartialEq, Eq)]
 #[serde(rename = "Win32_DiskDrive")]
 #[serde(rename_all = "PascalCase")]
@@ -46,7 +42,6 @@ pub struct DiskDrive {
     pub error_description: Option<String>,
     pub error_methodology: Option<String>,
     pub firmware_revision: Option<String>,
-    #[cfg(feature = "wmi")]
     pub install_date: Option<wmi::WMIDateTime>,
     pub last_error_code: Option<u32>,
     pub manufacturer: Option<String>,

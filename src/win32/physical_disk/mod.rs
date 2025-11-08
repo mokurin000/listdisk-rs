@@ -1,9 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "serde")]
 mod typing;
-#[cfg(feature = "serde")]
-#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 pub use typing::{BusType, HealthStatus, MediaType, Usage};
 
 /// ```rust
@@ -17,8 +14,6 @@ pub use typing::{BusType, HealthStatus, MediaType, Usage};
 /// ```
 ///
 /// Also see [MSDN](https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-physicaldisk)
-#[cfg(feature = "serde")]
-#[cfg_attr(docsrs, doc(cfg(feature = "serde")))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename = "MSFT_PhysicalDisk")]
 #[serde(rename_all = "PascalCase")]
