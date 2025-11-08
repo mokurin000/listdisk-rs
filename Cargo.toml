@@ -1,12 +1,20 @@
 [package]
 name = "listdisk-rs"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2024"
 authors = ["mokurin000 <mokurin000@gmail.com>"]
 description = "win32 disk info utils"
 categories = ["os::windows-apis", "filesystem"]
 license = "MIT"
 repository = "https://github.com/mokurin000/listdisk-rs"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
+targets = [
+    "aarch64-pc-windows-msvc",
+    "i686-pc-windows-msvc",
+    "x86_64-pc-windows-msvc",
+]
 
 [features]
 default = [
