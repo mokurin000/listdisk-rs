@@ -10,16 +10,20 @@ use wmi::WMIConnection;
 fn main() -> Result<(), Box<dyn Error>> {
     let wmi_storage = WMIConnection::with_namespace_path(r#"ROOT\Microsoft\Windows\Storage"#)?;
 
-    let systemdrive = env::var("SystemDrive")
-        .unwrap_or("C:".into())
-        .chars()
-        .next()
-        .unwrap();
     let mut filter_map = HashMap::new();
-    filter_map.insert(
-        "DriveLetter".into(),
-        wmi::FilterValue::String(systemdrive.to_string()),
-    );
+    if let Some(verbatim_path) = env::args().nth(1) {
+        filter_map.insert("Path".into(), wmi::FilterValue::String(verbatim_path));
+    } else {
+        let systemdrive = env::var("SystemDrive")
+            .unwrap_or("C:".into())
+            .chars()
+            .next()
+            .unwrap();
+        filter_map.insert(
+            "DriveLetter".into(),
+            wmi::FilterValue::String(systemdrive.to_string()),
+        );
+    }
 
     let volume = wmi_storage
         .filtered_query::<Volume>(&filter_map)?
