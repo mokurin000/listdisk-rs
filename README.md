@@ -4,11 +4,14 @@
 
 ## Features
 
-- Modular feature flags: volume, logical-drives, freespace, drive-info, serde, and more.
 - Supports Windows storage APIs (via `windows-sys`), WMI querying, and Unicode/UTF-16 strings.
 - Example binaries for volume listing, drive info, freespace reporting, and full usage.
-- Logging support (`log`, `pretty_env_logger`).
-- Error handling with `thiserror` and convenience crates for development.
+
+## Roadmap
+
+- [ ] `MSFT_Disk`, `MSFT_DiskToPartition`
+- [ ] `MSFT_DiskImage`
+- [ ] result types for WMI methods
 
 ## Getting Started
 

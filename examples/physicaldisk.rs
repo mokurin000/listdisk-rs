@@ -1,6 +1,10 @@
 use std::{collections::HashMap, env, error::Error};
 
-use listdisk_rs::win32::{partition::Partition, physical_disk::PhysicalDisk};
+use listdisk_rs::win32::{
+    partition::{Partition, PartitionToVolume},
+    physical_disk::PhysicalDisk,
+    volume_wmi::Volume,
+};
 use wmi::WMIConnection;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -16,20 +20,26 @@ fn main() -> Result<(), Box<dyn Error>> {
         "DriveLetter".into(),
         wmi::FilterValue::String(systemdrive.to_string()),
     );
-    let partition = wmi_storage
-        .filtered_query::<Partition>(&filter_map)?
+
+    let volume = wmi_storage
+        .filtered_query::<Volume>(&filter_map)?
         .pop()
         .unwrap();
+    let object_path = volume.obj_path;
+    let partitions = wmi_storage.associators::<Partition, PartitionToVolume>(&object_path)?;
+    println!("Found {} associated partitions!", partitions.len());
 
-    let mut filter_map = HashMap::new();
-    filter_map.insert(
-        "DeviceId".into(),
-        wmi::FilterValue::String(partition.disk_number.to_string()),
-    );
-    let physical_disks = wmi_storage
-        .filtered_query::<PhysicalDisk>(&filter_map)?
-        .pop()
-        .expect("not found");
+    let mut physical_disks = Vec::new();
+    for partition in partitions {
+        let mut filter_map = HashMap::new();
+        filter_map.insert(
+            "DeviceId".into(),
+            wmi::FilterValue::String(partition.disk_number.to_string()),
+        );
+        let mut physical_disk = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
+        physical_disks.append(&mut physical_disk);
+    }
+    physical_disks.dedup_by_key(|PhysicalDisk { device_id, .. }| device_id.clone());
 
     println!("System drive info:\n{physical_disks:#?}");
 

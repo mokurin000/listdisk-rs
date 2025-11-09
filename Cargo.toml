@@ -87,7 +87,7 @@ required-features = ["drive-info", "wmi"]
 
 [[example]]
 name = "physicaldisk"
-required-features = ["partition", "physical-disk", "wmi"]
+required-features = ["volume_wmi", "partition", "physical-disk", "wmi"]
 
 [[example]]
 name = "partitions"

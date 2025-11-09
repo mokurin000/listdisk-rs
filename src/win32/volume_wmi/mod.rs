@@ -6,6 +6,10 @@ use serde::{Deserialize, Serialize};
 #[serde(rename = "MSFT_Volume")]
 #[serde(rename_all = "PascalCase")]
 pub struct Volume {
+    /// Object Path for associated queries, method call.
+    #[serde(rename = "__Path")]
+    pub obj_path: String,
+
     /// ObjectId is a mandatory property that is used to opaquely and uniquely identify
     /// an instance of a class. ObjectId values are required to be globally unique.
     ///

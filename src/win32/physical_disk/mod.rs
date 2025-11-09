@@ -20,6 +20,10 @@ pub use typing::{BusType, CannotPoolReason, HealthStatus, MediaType, Usage};
 #[serde(rename = "MSFT_PhysicalDisk")]
 #[serde(rename_all = "PascalCase")]
 pub struct PhysicalDisk {
+    /// Object Path for associated queries, method call.
+    #[serde(rename = "__Path")]
+    pub obj_path: String,
+
     /// The identifier for the physical disk that is persistent across reboots.
     ///
     /// This is typically a number (e.g., "0", "1") assigned by the storage subsystem.

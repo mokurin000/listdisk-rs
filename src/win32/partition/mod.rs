@@ -1,11 +1,19 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Deserialize, Debug)]
+#[serde(rename = "MSFT_PartitionToVolume")]
+pub struct PartitionToVolume {}
+
 /// Represents a partition on a disk as exposed by the `MSFT_Partition` WMI class.
 /// Namespace: `Root\Microsoft\Windows\Storage`
 #[derive(Deserialize, Serialize, Debug, PartialEq, Eq)]
 #[serde(rename = "MSFT_Partition")]
 #[serde(rename_all = "PascalCase")]
 pub struct Partition {
+    /// Object Path for associated queries, method call.
+    #[serde(rename = "__Path")]
+    pub obj_path: String,
+
     /// ObjectId is a mandatory property that is used to opaquely and uniquely identify
     /// an instance of a class. ObjectId values are required to be globally unique.
     ///
