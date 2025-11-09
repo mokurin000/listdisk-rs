@@ -1,6 +1,6 @@
 [package]
 name = "listdisk-rs"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2024"
 authors = ["mokurin000 <mokurin000@gmail.com>"]
 description = "win32 disk info utils"
