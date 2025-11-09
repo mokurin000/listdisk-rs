@@ -1,47 +1,32 @@
-use std::process::Command;
+use std::collections::HashMap;
 
-pub fn diskindex_by_driveletter(drive_letter: char) -> Result<usize, Error> {
-    let stdout = Command::new("powershell.exe")
-        .arg("-command")
-        .arg(format!(
-            "(Get-Partition -DriveLetter {drive_letter}).DiskNumber"
-        ))
-        .output()?
-        .stdout;
+use wmi::{FilterValue, WMIConnection, WMIError, WMIResult};
 
-    Ok(String::from_utf8(stdout)
-        .expect("failed to parse output")
-        .trim()
-        .parse()?)
+use crate::win32::partition::Partition;
+
+/// - wmi_conn: WMI connection to `ROOT\Microsoft\Windows\Storage` namespace
+/// - verbatim_path: \\?\Volume{...}
+pub fn diskindex_by_volume_path(
+    wmi_storage: &WMIConnection,
+    verbatim_path: &String,
+) -> WMIResult<u32> {
+    wmi_storage
+        .query::<Partition>()?
+        .into_iter()
+        .filter(|p| p.access_paths.contains(verbatim_path))
+        .next()
+        .map(|p| p.disk_number)
+        .ok_or_else(|| WMIError::ResultEmpty)
 }
 
-/// verbatim_path: `\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\`
-pub fn diskindex_by_volume_path(verbatim_path: impl AsRef<str>) -> Result<usize, Error> {
-    let command = format!(
-        "(Get-Partition -volume (Get-Volume -Path \"{}\")).DiskNumber",
-        verbatim_path.as_ref()
-    );
-    let stdout = Command::new("powershell.exe")
-        .arg("-command")
-        .arg(command)
-        .output()?
-        .stdout;
-
-    let output = String::from_utf8(stdout)?;
-    if output.trim().is_empty() {
-        return Err(Error::EmptyOutput);
-    }
-    Ok(output.trim().parse()?)
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("io error: {0}")]
-    IOError(#[from] std::io::Error),
-    #[error("parse error: {0}")]
-    ParseError(#[from] std::num::ParseIntError),
-    #[error("utf-8 error: {0}")]
-    UTF8Error(#[from] std::string::FromUtf8Error),
-    #[error("empty output, maybe permission issue!")]
-    EmptyOutput,
+/// - wmi_conn: WMI connection to `ROOT\Microsoft\Windows\Storage` namespace
+pub fn diskindex_by_driveletter(wmi_storage: &WMIConnection, drive_letter: char) -> WMIResult<u32> {
+    Ok(wmi_storage
+        .filtered_query::<Partition>(&HashMap::from([(
+            "DriveLetter".to_string(),
+            FilterValue::String(drive_letter.to_string()),
+        )]))?
+        .first()
+        .ok_or_else(|| WMIError::ResultEmpty)?
+        .disk_number)
 }

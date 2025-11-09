@@ -2,11 +2,12 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use byte_unit::{AdjustedByte, Byte, Unit};
+use listdisk_rs::win32::drive_info::DiskDrive;
 use listdisk_rs::win32::freespace::FreeSpace;
 use listdisk_rs::win32::logical_drives::get_logical_driveletters;
+use listdisk_rs::win32::utils::{diskindex_by_driveletter, diskindex_by_volume_path};
 use listdisk_rs::win32::volume::Volume;
-use listdisk_rs::win32::{drive_info::DiskDrive, partition::Partition};
-use wmi::{FilterValue, WMIConnection, WMIError, WMIResult};
+use wmi::WMIConnection;
 
 fn main() -> Result<()> {
     pretty_env_logger::init_timed();
@@ -108,25 +109,4 @@ fn human_size(bytes: u64) -> AdjustedByte {
     }
 
     unreachable!()
-}
-
-fn diskindex_by_volume_path(wmi_conn: &WMIConnection, volume_path: &String) -> WMIResult<u32> {
-    wmi_conn
-        .query::<Partition>()?
-        .into_iter()
-        .filter(|p| p.access_paths.contains(volume_path))
-        .next()
-        .map(|p| p.disk_number)
-        .ok_or_else(|| WMIError::ResultEmpty)
-}
-
-fn diskindex_by_driveletter(wmi_conn: &WMIConnection, letter: char) -> WMIResult<u32> {
-    Ok(wmi_conn
-        .filtered_query::<Partition>(&HashMap::from([(
-            "DriveLetter".to_string(),
-            FilterValue::String(letter.to_string()),
-        )]))?
-        .first()
-        .ok_or_else(|| WMIError::ResultEmpty)?
-        .disk_number)
 }

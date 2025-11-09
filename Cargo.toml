@@ -27,6 +27,7 @@ default = [
     "volume_wmi",
     "serde",
     "wmi",
+    "utils",
 ]
 volume = ["encoding", "win32_sys", "win32_sys_foundation"]
 logical-drives = ["win32_sys", "win32_sys_foundation", "dep:bitvec"]
@@ -35,6 +36,7 @@ drive-info = ["serde", "wmi"]
 physical-disk = ["serde"]
 partition = ["serde"]
 volume_wmi = ["serde"]
+utils = ["wmi", "partition"]
 
 encoding = ["dep:utf16string"]
 win32_sys = ["dep:windows-sys", "windows-sys/Win32_Storage_FileSystem"]

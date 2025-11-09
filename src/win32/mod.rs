@@ -34,5 +34,6 @@ pub mod logical_drives;
 pub mod volume;
 
 /// powershell-based helper functions
-#[deprecated(note = "Use MSFT_* series instead.", since = "0.2.3")]
+#[cfg(feature = "utils")]
+#[cfg_attr(docsrs, doc(cfg(feature = "utils")))]
 pub mod utils;
