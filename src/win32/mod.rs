@@ -18,6 +18,11 @@ pub mod partition;
 #[cfg_attr(docsrs, doc(cfg(feature = "volume_wmi")))]
 pub mod volume_wmi;
 
+/// WMI type for MSFT_Volume
+#[cfg(feature = "storagepool")]
+#[cfg_attr(docsrs, doc(cfg(feature = "storagepool")))]
+pub mod storagepool;
+
 /// user quota, disk free space, e.g.
 #[cfg(feature = "freespace")]
 #[cfg_attr(docsrs, doc(cfg(feature = "freespace")))]

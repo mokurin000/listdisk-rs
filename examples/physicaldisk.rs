@@ -3,6 +3,7 @@ use std::{collections::HashMap, env, error::Error};
 use listdisk_rs::win32::{
     partition::{Partition, PartitionToVolume},
     physical_disk::PhysicalDisk,
+    storagepool::{StoragePool, StoragePoolToVolume},
     volume_wmi::Volume,
 };
 use wmi::WMIConnection;
@@ -31,21 +32,28 @@ fn main() -> Result<(), Box<dyn Error>> {
         .unwrap();
     let object_path = volume.obj_path;
     let partitions = wmi_storage.associators::<Partition, PartitionToVolume>(&object_path)?;
-    println!("Found {} associated partitions!", partitions.len());
 
-    let mut physical_disks = Vec::new();
-    for partition in partitions {
-        let mut filter_map = HashMap::new();
-        filter_map.insert(
-            "DeviceId".into(),
-            wmi::FilterValue::String(partition.disk_number.to_string()),
-        );
-        let mut physical_disk = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
-        physical_disks.append(&mut physical_disk);
+    if !partitions.is_empty() {
+        println!("Found {} associated partitions!", partitions.len());
+
+        let mut physical_disks = Vec::new();
+        for partition in partitions {
+            let mut filter_map = HashMap::new();
+            filter_map.insert(
+                "DeviceId".into(),
+                wmi::FilterValue::String(partition.disk_number.to_string()),
+            );
+            let mut physical_disk = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
+            physical_disks.append(&mut physical_disk);
+        }
+        physical_disks.dedup_by_key(|PhysicalDisk { device_id, .. }| device_id.clone());
+
+        println!("System drive info:\n{physical_disks:#?}");
+    } else {
+        let storage_pool =
+            wmi_storage.associators::<StoragePool, StoragePoolToVolume>(&object_path)?;
+        println!("System storage pool info:\n{storage_pool:#?}");
     }
-    physical_disks.dedup_by_key(|PhysicalDisk { device_id, .. }| device_id.clone());
-
-    println!("System drive info:\n{physical_disks:#?}");
 
     Ok(())
 }
