@@ -5,15 +5,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 /// Bus type of the physical disk.
 ///
 /// The storage bus type of the physical disk.
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    Serialize_repr,
-    Deserialize_repr,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
 #[repr(u16)]
 pub enum BusType {
     /// The bus type is unknown.
@@ -56,15 +48,7 @@ pub enum BusType {
 }
 
 /// Media type of the physical disk.
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    Serialize_repr,
-    Deserialize_repr,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
 #[repr(u16)]
 pub enum MediaType {
     /// Unspecified media type.
@@ -78,15 +62,7 @@ pub enum MediaType {
 }
 
 /// High-level health indication of the device.
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    Serialize_repr,
-    Deserialize_repr,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
 #[repr(u16)]
 pub enum HealthStatus {
     /// The disk is healthy.
@@ -102,15 +78,7 @@ pub enum HealthStatus {
 /// Intended usage of the physical disk within a concrete pool.
 ///
 /// Storage pools are required to follow the assigned policy for a physical disk.
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    Serialize_repr,
-    Deserialize_repr,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize_repr, Deserialize_repr)]
 #[repr(u16)]
 pub enum Usage {
     /// The intended usage is not specified.
@@ -129,4 +97,61 @@ pub enum Usage {
     /// comprising a virtual disk. It will back a virtual disk's write-back cache,
     /// if configured.
     Journal = 5,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CannotPoolReason {
+    Unknown,
+    Other,
+    InAPool,
+    NotHealthy,
+    RemovableMedia,
+    InUseByCluster,
+    Offline,
+    InsufficientCapacity,
+    SpareDisk,
+    ReservedBySubSystem,
+    Starting,
+    MicrosoftReserved(u16),
+    VendorReserved(u16),
+}
+
+impl From<u16> for CannotPoolReason {
+    fn from(value: u16) -> Self {
+        match value {
+            0 => Self::Unknown,
+            1 => Self::Other,
+            2 => Self::InAPool,
+            3 => Self::NotHealthy,
+            4 => Self::RemovableMedia,
+            5 => Self::InUseByCluster,
+            6 => Self::Offline,
+            7 => Self::InsufficientCapacity,
+            8 => Self::SpareDisk,
+            9 => Self::ReservedBySubSystem,
+            10 => Self::Starting,
+            0x8000.. => Self::VendorReserved(value),
+            _ => Self::MicrosoftReserved(value),
+        }
+    }
+}
+
+impl From<CannotPoolReason> for u16 {
+    fn from(value: CannotPoolReason) -> Self {
+        match value {
+            CannotPoolReason::Unknown => 0,
+            CannotPoolReason::Other => 1,
+            CannotPoolReason::InAPool => 2,
+            CannotPoolReason::NotHealthy => 3,
+            CannotPoolReason::RemovableMedia => 4,
+            CannotPoolReason::InUseByCluster => 5,
+            CannotPoolReason::Offline => 6,
+            CannotPoolReason::InsufficientCapacity => 7,
+            CannotPoolReason::SpareDisk => 8,
+            CannotPoolReason::ReservedBySubSystem => 9,
+            CannotPoolReason::Starting => 10,
+            CannotPoolReason::MicrosoftReserved(v) => v,
+            CannotPoolReason::VendorReserved(v) => v,
+        }
+    }
 }

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 mod typing;
-pub use typing::{BusType, HealthStatus, MediaType, Usage};
+pub use typing::{BusType, CannotPoolReason, HealthStatus, MediaType, Usage};
 
 /// ```rust
 /// use wmi::WMIConnection;
@@ -47,33 +47,7 @@ pub struct PhysicalDisk {
     pub enclosure_number: Option<u16>,
     pub slot_number: Option<u16>,
     pub can_pool: bool,
-    /// An array of values specifying the reasons why this physical disk cannot be added to a concrete pool. This property is valid only if the CanPool property is FALSE.
-    ///
-    /// Unknown (0)
-    ///
-    /// Other (1)
-    ///
-    /// In a Pool (2)
-    ///
-    /// Not Healthy (3)
-    ///
-    /// Removable Media (4)
-    ///
-    /// In Use by Cluster (5)
-    ///
-    /// Offline (6)
-    ///
-    /// Insufficient Capacity (7)
-    ///
-    /// Spare Disk (8)
-    ///
-    /// Reserved by subsystem (9)
-    ///
-    /// Starting (10)
-    ///
-    /// Microsoft Reserved (..)
-    ///
-    /// Vendor Reserved (0x8000..)
+    /// For typed reason, use CannotPoolReason::from.
     pub cannot_pool_reason: Vec<u16>,
     pub other_cannot_pool_reason_description: Option<String>,
     pub is_partial: bool,
