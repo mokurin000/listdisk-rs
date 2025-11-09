@@ -31,8 +31,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         .pop()
         .unwrap();
     let object_path = volume.obj_path;
-    let partitions = wmi_storage.associators::<Partition, PartitionToVolume>(&object_path)?;
 
+    let storage_pool = wmi_storage.associators::<StoragePool, StoragePoolToVolume>(&object_path)?;
+    println!("System storage pool info:\n{storage_pool:#?}");
+
+    let partitions = wmi_storage.associators::<Partition, PartitionToVolume>(&object_path)?;
     if !partitions.is_empty() {
         println!("Found {} associated partitions!", partitions.len());
 
@@ -49,10 +52,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         physical_disks.dedup_by_key(|PhysicalDisk { device_id, .. }| device_id.clone());
 
         println!("System drive info:\n{physical_disks:#?}");
-    } else {
-        let storage_pool =
-            wmi_storage.associators::<StoragePool, StoragePoolToVolume>(&object_path)?;
-        println!("System storage pool info:\n{storage_pool:#?}");
     }
 
     Ok(())
