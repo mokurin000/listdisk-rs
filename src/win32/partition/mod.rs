@@ -6,6 +6,21 @@ use serde::{Deserialize, Serialize};
 #[serde(rename = "MSFT_Partition")]
 #[serde(rename_all = "PascalCase")]
 pub struct Partition {
+    /// ObjectId is a mandatory property that is used to opaquely and uniquely identify
+    /// an instance of a class. ObjectId values are required to be globally unique.
+    ///
+    /// That is, no two objects should ever have the same ObjectId,
+    /// even if they are managed by separate storage management providers,
+    /// or are on different storage subsystems.
+    pub object_id: String,
+
+    /// UniqueId is a mandatory property that is used to uniquely identify a logical
+    /// instance of a storage subsystem's object.
+    ///
+    /// This value must be the same for an object viewed by two or more provider instances,
+    /// even if they are running on separate management servers.
+    pub unique_id: String,
+
     /// The OS-assigned disk number that contains this partition.
     pub disk_number: u32,
 

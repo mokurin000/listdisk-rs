@@ -26,7 +26,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         "DeviceId".into(),
         wmi::FilterValue::String(partition.disk_number.to_string()),
     );
-    let physical_disks = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
+    let physical_disks = wmi_storage
+        .filtered_query::<PhysicalDisk>(&filter_map)?
+        .pop()
+        .expect("not found");
 
     println!("System drive info:\n{physical_disks:#?}");
 
