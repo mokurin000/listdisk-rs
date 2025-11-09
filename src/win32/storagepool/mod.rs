@@ -55,16 +55,16 @@ pub struct StoragePool {
     pub other_operational_status_description: Option<String>,
 
     /// Total capacity of the pool in bytes
-    pub size: u64,
+    pub size: Option<u64>,
 
     /// Total allocated capacity in bytes
-    pub allocated_size: u64,
+    pub allocated_size: Option<u64>,
 
     /// Logical sector size in bytes
-    pub logical_sector_size: u64,
+    pub logical_sector_size: Option<u64>,
 
     /// Physical sector size in bytes
-    pub physical_sector_size: u64,
+    pub physical_sector_size: Option<u64>,
 
     /// Default provisioning type for new virtual disks
     pub provisioning_type_default: ProvisioningType,
@@ -76,47 +76,47 @@ pub struct StoragePool {
     pub resiliency_setting_name_default: String,
 
     /// TRUE if configuration is locked
-    pub is_read_only: bool,
+    pub is_read_only: Option<bool>,
 
     /// Reason for read-only state
-    pub read_only_reason: ReadOnlyReason,
+    pub read_only_reason: Option<ReadOnlyReason>,
 
     /// TRUE if used in a failover cluster
-    pub is_clustered: bool,
+    pub is_clustered: Option<bool>,
     /// TRUE if deduplication is supported
-    pub supports_deduplication: bool,
+    pub supports_deduplication: Option<bool>,
 
     /// Thin-provisioning alert thresholds (percentages)
-    pub thin_provisioning_alert_thresholds: Vec<u16>,
+    pub thin_provisioning_alert_thresholds: Option<Vec<u16>>,
 
     /// TRUE if disks are zeroed on unmap/remove
-    pub clear_on_deallocate: bool,
+    pub clear_on_deallocate: Option<bool>,
 
     /// TRUE if disks preserve data after power loss
-    pub is_power_protected: bool,
+    pub is_power_protected: Option<bool>,
 
     /// Repair policy for virtual disks
-    pub repair_policy: RepairPolicy,
+    pub repair_policy: Option<RepairPolicy>,
 
     /// Default enclosure-aware placement for new virtual disks
-    pub enclosure_aware_default: bool,
+    pub enclosure_aware_default: Option<bool>,
 
     /// Default fault domain awareness level
-    pub fault_domain_awareness_default: FaultDomainAwareness,
+    pub fault_domain_awareness_default: Option<FaultDomainAwareness>,
 
     /// Policy for retiring missing physical disks
-    pub retire_missing_physical_disks: RetireMissingPhysicalDisks,
+    pub retire_missing_physical_disks: Option<RetireMissingPhysicalDisks>,
 
     /// Minimum OS version that supports this pool
-    pub version: Version,
+    pub version: Option<Version>,
     /// Default write-cache size for new virtual disks
-    pub write_cache_size_default: u64,
+    pub write_cache_size_default: Option<u64>,
 
     /// Minimum allowed write-cache size
-    pub write_cache_size_min: u64,
+    pub write_cache_size_min: Option<u64>,
 
     /// Maximum allowed write-cache size
-    pub write_cache_size_max: u64,
+    pub write_cache_size_max: Option<u64>,
 }
 
 // Empty association structs (required for WMI object graph navigation)
