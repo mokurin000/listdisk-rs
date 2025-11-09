@@ -33,7 +33,7 @@ pub mod logical_drives;
 #[cfg_attr(docsrs, doc(cfg(feature = "volume")))]
 pub mod volume;
 
-/// powershell-based helper functions
+/// diskIndex/DiskNumber helper functions
 #[cfg(feature = "utils")]
 #[cfg_attr(docsrs, doc(cfg(feature = "utils")))]
 pub mod utils;
