@@ -175,7 +175,7 @@ pub struct PhysicalDisk {
     pub spindle_speed: u32,
 
     /// Indicates whether LED indication (e.g., activity/fault lights) is enabled.
-    pub is_indication_enabled: bool,
+    pub is_indication_enabled: Option<bool>,
 
     /// Number of the enclosure containing the disk (0-based index).
     /// `null` if not in an enclosure or unknown.
@@ -209,5 +209,5 @@ pub struct PhysicalDisk {
 
     /// Indicates that only part of the physical disk is exposed (e.g., due to partitioning or RAID).
     /// When `true`, not all capacity is available for pooling.
-    pub is_partial: bool,
+    pub is_partial: Option<bool>,
 }
