@@ -28,6 +28,49 @@ pub struct PhysicalDisk {
     pub supported_usages: Vec<Usage>,
 
     pub friendly_name: String,
+    /// From powershell cmdlet:
+    ///
+    /// ```powershell
+    /// Get-PhysicalDisk | Get-Member -Name OperationalStatus | fl
+    /// ```
+    ///
+    /// | Opcode | Reason                     |
+    /// | ------ | -------------------------- |
+    /// | 1      | Other                      |
+    /// | 2      | OK                         |
+    /// | 3      | Degraded                   |
+    /// | 4      | Stressed                   |
+    /// | 5      | Predictive Failure         |
+    /// | 6      | Error                      |
+    /// | 7      | Recoverable Error          |
+    /// | 8      | Starting                   |
+    /// | 9      | Stopping                   |
+    /// | 10     | Stopped                    |
+    /// | 11     | In Service                 |
+    /// | 12     | No Contact                 |
+    /// | 13     | Lost Communication         |
+    /// | 14     | Aborted                    |
+    /// | 15     | Dormant                    |
+    /// | 16     | Supporting Entity in Error |
+    /// | 17     | Completed                  |
+    /// | 18     | Power Mode                 |
+    /// | 19     | Relocating                 |
+    /// | 53252  | Failed Media               |
+    /// | 53253  | Split                      |
+    /// | 53254  | Stale Metadata             |
+    /// | 53255  | IO Error                   |
+    /// | 53256  | Unrecognized Metadata      |
+    /// | 53269  | Removing From Pool         |
+    /// | 53270  | In Maintenance Mode        |
+    /// | 53271  | Updating Firmware          |
+    /// | 53272  | Device Hardware Error      |
+    /// | 53273  | Not Usable                 |
+    /// | 53274  | Transient Error            |
+    /// | 53276  | Starting Maintenance Mode  |
+    /// | 53277  | Stopping Maintenance Mode  |
+    /// | 53285  | Threshold Exceeded         |
+    /// | 53286  | Abnormal Latency           |
+    /// | ..     | Unknown                    |
     pub operational_status: Vec<u16>,
     pub operational_details: Vec<String>,
     pub physical_location: Option<String>,
