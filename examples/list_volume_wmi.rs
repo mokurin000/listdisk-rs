@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::error::Error;
 
-use listdisk_rs::win32::partition::Partition;
+use listdisk_rs::win32::partition::{Partition, PartitionToVolume};
 use listdisk_rs::win32::physical_disk::PhysicalDisk;
 use listdisk_rs::win32::volume_wmi::Volume;
 use wmi::WMIConnection;
@@ -12,33 +12,29 @@ fn main() -> Result<(), Box<dyn Error>> {
     let volumes = wmi_storage.query::<Volume>()?;
 
     for volume in volumes {
-        println!("------------------");
+        println!("#######################################");
         println!("{volume:#?}");
-        let verbatim = volume.path;
-        let mut partitions = wmi_storage.query::<Partition>()?;
-        partitions.retain(|partition| partition.access_paths.contains(&verbatim));
+        let partitions =
+            wmi_storage.associators::<Partition, PartitionToVolume>(&volume.obj_path)?;
 
-        let Some(partition) = partitions.first() else {
-            continue;
-        };
+        for partition in partitions {
+            println!("---------");
+            println!("{:#?}", partition);
 
-        println!("------");
-        println!("{:#?}", partition);
+            let mut filter_map = HashMap::new();
+            filter_map.insert(
+                "DeviceId".into(),
+                wmi::FilterValue::String(partition.disk_number.to_string()),
+            );
+            let physical_disks = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
+            let Some(physical_disk) = physical_disks.first() else {
+                continue;
+            };
 
-        let mut filter_map = HashMap::new();
-        filter_map.insert(
-            "DeviceId".into(),
-            wmi::FilterValue::String(partition.disk_number.to_string()),
-        );
-        let physical_disks = wmi_storage.filtered_query::<PhysicalDisk>(&filter_map)?;
-        let Some(physical_disk) = physical_disks.first() else {
-            continue;
-        };
-
-        println!("------");
-        println!("{physical_disk:#?}");
+            println!("---> {physical_disk:#?}");
+        }
     }
-    println!("------------------");
+    println!("#######################################");
 
     Ok(())
 }
