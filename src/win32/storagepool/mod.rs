@@ -15,11 +15,6 @@ pub struct StoragePool {
     #[serde(rename = "__Path")]
     pub obj_path: String,
 
-    /// The identifier for the physical disk that is persistent across reboots.
-    ///
-    /// This is typically a number (e.g., "0", "1") assigned by the storage subsystem.
-    pub device_id: String,
-
     /// ObjectId is a mandatory property that is used to opaquely and uniquely identify
     /// an instance of a class. ObjectId values are required to be globally unique.
     ///
@@ -27,6 +22,13 @@ pub struct StoragePool {
     /// even if they are managed by separate storage management providers,
     /// or are on different storage subsystems.
     pub object_id: String,
+
+    /// UniqueId is a mandatory property that is used to uniquely identify a logical
+    /// instance of a storage subsystem's object.
+    ///
+    /// This value must be the same for an object viewed by two or more provider instances,
+    /// even if they are running on separate management servers.
+    pub unique_id: String,
 
     /// A user-friendly name for the storage pool
     pub friendly_name: String,
@@ -81,7 +83,6 @@ pub struct StoragePool {
 
     /// TRUE if used in a failover cluster
     pub is_clustered: bool,
-
     /// TRUE if deduplication is supported
     pub supports_deduplication: bool,
 
@@ -101,7 +102,6 @@ pub struct StoragePool {
     pub enclosure_aware_default: bool,
 
     /// Default fault domain awareness level
-    #[serde(rename = "FaultDomainAwarenessDefault")]
     pub fault_domain_awareness_default: FaultDomainAwareness,
 
     /// Policy for retiring missing physical disks
@@ -109,7 +109,6 @@ pub struct StoragePool {
 
     /// Minimum OS version that supports this pool
     pub version: Version,
-
     /// Default write-cache size for new virtual disks
     pub write_cache_size_default: u64,
 

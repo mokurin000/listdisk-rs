@@ -104,5 +104,9 @@ name = "partitions"
 required-features = ["partition", "wmi"]
 
 [[example]]
+name = "storage_pools"
+required-features = ["storagepool", "wmi"]
+
+[[example]]
 name = "full_usage"
 required-features = ["default"]
