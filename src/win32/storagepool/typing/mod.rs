@@ -1,4 +1,3 @@
-use serde::Deserialize;
 use serde_repr::Deserialize_repr;
 
 /// Health status of the storage pool
@@ -78,14 +77,12 @@ pub enum RepairPolicy {
 }
 
 /// Policy for retiring missing physical disks
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize_repr)]
+#[repr(u16)]
 pub enum RetireMissingPhysicalDisks {
-    #[serde(rename = "Auto")]
-    Auto,
-    #[serde(rename = "Always")]
-    Always,
-    #[serde(rename = "Never")]
-    Never,
+    Auto = 1,
+    Always = 2,
+    Never = 3,
 }
 
 /// Intended usage of the storage pool
@@ -110,4 +107,30 @@ pub enum Version {
     WindowsServer2012 = 1,
     WindowsServer2012R2Preview = 2,
     WindowsServer2012R2 = 3,
+    WindowsServer2016Preview0 = 4,
+    WindowsServer2016Preview1 = 5,
+    WindowsServer2016Preview2 = 6,
+    WindowsServer2016Preview3 = 7,
+    WindowsServer2016Preview4 = 8,
+    WindowsServer2016Preview5 = 9,
+    WindowsServer2016Preview6 = 10,
+    WindowsServer2016Preview7 = 11,
+    WindowsServer2016Preview8 = 12,
+    WindowsServer2016Preview9 = 13,
+    WindowsServer2016PreviewA = 14,
+    WindowsServer2016PreviewB = 15,
+    WindowsServer2016PreviewC = 16,
+    WindowsServer2016PreviewD = 17,
+    WindowsServer2016PreviewE = 18,
+    WindowsServer2016 = 19,
+    WindowsServer2016RS3 = 20,
+    WindowsServer2019Preview = 21,
+    WindowsServer2019 = 22,
+    WindowsServer2022Preview1 = 23,
+    WindowsServer2022Preview2 = 24,
+    WindowsServer2022Preview3 = 25,
+    WindowsServer2022Preview4 = 26,
+    WindowsServer2022 = 27,
+    WindowsServer2025 = 28,
+    WindowsServer2025SP1 = 29,
 }

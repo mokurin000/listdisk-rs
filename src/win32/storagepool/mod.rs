@@ -31,10 +31,10 @@ pub struct StoragePool {
     pub unique_id: String,
 
     /// A user-friendly name for the storage pool
-    pub friendly_name: String,
+    pub friendly_name: Option<String>,
 
     /// Semi-unique human-readable identifier scoped to the storage subsystem
-    pub name: String,
+    pub name: Option<String>,
 
     /// Intended usage of the pool
     pub usage: Usage,
@@ -73,7 +73,7 @@ pub struct StoragePool {
     pub supported_provisioning_types: Vec<ProvisioningType>,
 
     /// Default resiliency setting name (corresponds to MSFT_ResiliencySetting.Name)
-    pub resiliency_setting_name_default: String,
+    pub resiliency_setting_name_default: Option<String>,
 
     /// TRUE if configuration is locked
     pub is_read_only: Option<bool>,
