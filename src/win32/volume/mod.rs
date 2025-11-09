@@ -7,6 +7,7 @@ use windows_sys::Win32::Foundation::{
 };
 use windows_sys::Win32::Storage::FileSystem::{FindFirstVolumeW, FindNextVolumeW, FindVolumeClose};
 
+/// Iterator of volume verbatim paths.
 #[derive(Debug, Clone)]
 pub struct Volume<const N: usize = 64> {
     handle: HANDLE,

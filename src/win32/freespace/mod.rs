@@ -33,6 +33,7 @@ impl FreeSpace {
     }
 
     #[cfg(feature = "encoding")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "encoding")))]
     pub fn try_from_path(path: impl AsRef<std::path::Path>) -> Option<Self> {
         let wstring =
             utf16string::WString::<utf16string::LE>::from(path.as_ref().to_string_lossy().as_ref());
